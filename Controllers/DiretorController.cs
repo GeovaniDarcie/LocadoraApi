@@ -16,11 +16,35 @@ public class DiretorController : ControllerBase {
         return await _context.Diretores.ToListAsync();
     }
 
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Diretor>> Get(int id) {
+       var diretor = await _context.Diretores.FirstOrDefaultAsync(diretor => diretor.Id == id);
+       return Ok(diretor);
+    }
+
+
     [HttpPost]
     public async Task<ActionResult<Diretor>> Post(Diretor diretor) {
        _context.Diretores.Add(diretor);
        await _context.SaveChangesAsync();
 
        return Ok(diretor); 
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<Diretor>> Put(int id, [FromBody] Diretor diretor) {
+        diretor.Id = id;
+        _context.Diretores.Update(diretor);
+        await _context.SaveChangesAsync();
+
+        return Ok(diretor);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<Diretor>> Delete(int id) {
+        var diretor = _context.Diretores.FirstOrDefaultAsync(diretor => diretor.Id == id);
+        _context.Remove(diretor);
+        await _context.SaveChangesAsync();
+        return Ok(diretor);
     }
 }

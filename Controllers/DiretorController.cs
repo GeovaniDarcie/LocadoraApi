@@ -12,14 +12,24 @@ public class DiretorController : ControllerBase {
     }
 
     [HttpGet]
-    public async Task<List<Diretor>> Get() {
-        return await _context.Diretores.ToListAsync();
+    public async Task<List<DiretorOutputGetAllDTO>> Get() {
+        var diretores = await _context.Diretores.ToListAsync();
+
+        var outputDTOList = new List<DiretorOutputGetAllDTO>();
+
+        foreach (Diretor diretor in diretores) {
+            outputDTOList.Add(new DiretorOutputGetAllDTO(diretor.Id, diretor.Nome));
+        }
+
+        return outputDTOList;
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Diretor>> Get(int id) {
+    public async Task<ActionResult<DiretorOutputGetByIdDTO>> Get(int id) {
        var diretor = await _context.Diretores.FirstOrDefaultAsync(diretor => diretor.Id == id);
-       return Ok(diretor);
+
+       var outputDTO = new DiretorOutputGetByIdDTO(diretor.Id, diretor.Nome);
+       return Ok(outputDTO);
     }
 
 
